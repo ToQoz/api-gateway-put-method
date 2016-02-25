@@ -18,7 +18,7 @@ module.exports = function(apiGateway, params, cb) {
     var puttedMethods = methods.map(function(method) { return method.httpMethod; });
     del(arraySubtract(existingMethods, puttedMethods), function(err, data) {
       if (err) {
-        (err, null);
+        cb(err, null);
       } else {
         var operations = putResult.operations.concat(data.operations);
         cb(null, {items: putResult.items, operations: operations, deletedItems: data.items});

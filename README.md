@@ -156,3 +156,4 @@ This function creates or updates (or deletes) AWS API Gateway's resource if it d
         - operations - `Array<map>`
           - op - `String` - like a `'apiGateway.putMethod'`
           - params - `map` - like a `{restApiId: 'xxx', resourceId: 'yyy', httpMethod: 'GET'}`
+          - message - `String` - like a `"apiGateway: put method GET (resourceId=yyy)"`

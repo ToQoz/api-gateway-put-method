@@ -38,19 +38,31 @@ test('create GET -> nop GET + create POST -> delete GET', function(t) {
   var ag = new APIGateway();
 
   // create GET
-  putMethod(ag, {restApiId: '', resourceId: '', methods: {httpMethod: "GET"}}, function(err, data) {
+  putMethod(ag, {restApiId: '', resourceId: 'y', methods: {httpMethod: "GET"}}, function(err, data) {
     t.deepEqual(data.items, [{httpMethod: "GET"}]);
-    t.deepEqual(data.operations, [{op: 'apiGateway.putMethod', params: {restApiId: '', resourceId: '', httpMethod: "GET"}}]);
+    t.deepEqual(data.operations, [{
+      message: 'apiGateway: put method GET (resourceId=y)',
+      op: 'apiGateway.putMethod',
+      params: {restApiId: '', resourceId: 'y', httpMethod: "GET"}
+    }]);
 
     // nop GET + create POST
-    putMethod(ag, {restApiId: '', resourceId: '', methods: [{httpMethod: "GET"}, {httpMethod: "POST"}]}, function(err, data) {
+    putMethod(ag, {restApiId: '', resourceId: 'y', methods: [{httpMethod: "GET"}, {httpMethod: "POST"}]}, function(err, data) {
       t.deepEqual(data.items, [{httpMethod: "GET"}, {httpMethod: "POST"}]);
-      t.deepEqual(data.operations, [{op: 'apiGateway.putMethod', params: {restApiId: '', resourceId: '', httpMethod: "POST"}}]);
+      t.deepEqual(data.operations, [{
+        message: 'apiGateway: put method POST (resourceId=y)',
+        op: 'apiGateway.putMethod',
+        params: {restApiId: '', resourceId: 'y', httpMethod: "POST"}
+      }]);
 
       // delete GET
-      putMethod(ag, {deleteOthers: true, restApiId: '', resourceId: '', methods: {httpMethod: "POST"}}, function(err, data) {
+      putMethod(ag, {deleteOthers: true, restApiId: '', resourceId: 'y', methods: {httpMethod: "POST"}}, function(err, data) {
         t.deepEqual(data.items, [{httpMethod: "POST"}]);
-        t.deepEqual(data.operations, [{op: 'apiGateway.deleteMethod', params: {restApiId: '', resourceId: '', httpMethod: "GET"}}]);
+        t.deepEqual(data.operations, [{
+          message: 'apiGateway: delete method GET (resourceId=y)',
+          op: 'apiGateway.deleteMethod',
+          params: {restApiId: '', resourceId: 'y', httpMethod: "GET"}
+        }]);
       });
     });
   });

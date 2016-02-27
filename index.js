@@ -127,29 +127,39 @@ function _list(apiGateway, params, dryRun, cb) {
 }
 
 function _del(apiGateway, params, dryRun, cb) {
-  var operations = [{op: 'apiGateway.deleteMethod', params: params}];
+  var operation = {
+    op: 'apiGateway.deleteMethod',
+    params: params,
+    message: 'apiGateway: delete method ' + params.httpMethod + ' (resourceId=' + params.resourceId + ')',
+  };
 
   if (dryRun) {
-    cb(null, {operations: operations, items: []});
+    operations.message = '(dryrun) ' + message,
+    cb(null, {operations: [operation], items: []});
   } else {
     apiGateway.deleteMethod(
       params,
       function(err) {
         var data = {httpMethod: params.httpMethod};
-        cb(err, {operations: operations, items: [data]});
+        cb(err, {operations: [operation], items: [data]});
       }
     );
   }
 }
 
 function _create(apiGateway, params, dryRun, cb) {
-  var operations = [{op: 'apiGateway.putMethod', params: params}];
+  var operation = {
+    op: 'apiGateway.putMethod',
+    params: params,
+    message: 'apiGateway: put method ' + params.httpMethod + ' (resourceId=' + params.resourceId + ')',
+  };
 
   if (dryRun) {
-    cb(null, {operations: operations, items: []});
+    operations.message = '(dryrun) ' + message,
+    cb(null, {operations: [operation], items: []});
   } else {
     apiGateway.putMethod(params, function(err, data) {
-      cb(err, {operations: operations, items: [data]});
+      cb(err, {operations: [operation], items: [data]});
     });
   }
 }
@@ -172,12 +182,17 @@ function _update(apiGateway, params, dryRun, cb) {
       if (patchOperations.length > 0) {
         params = assign({}, idendifiers, {patchOperations: patchOperations});
 
-        var operations = [{op: 'apiGateway.updateMethod', params: params}];
+        var operation = {
+          op: 'apiGateway.updateMethod',
+          params: params,
+          message: 'apiGateway: update method ' + params.httpMethod + ' (resourceId=' + params.resourceId + ')',
+        };
         if (dryRun) {
-          cb(null, {operations: operations, items: []});
+          operations.message = '(dryrun) ' + message,
+          cb(null, {operations: [operation], items: []});
         } else {
           apiGateway.updateMethod(params, function(err, data) {
-            cb(err, {operations: operations, items: [data]});
+            cb(err, {operations: [operation], items: [data]});
           });
         }
       } else {
